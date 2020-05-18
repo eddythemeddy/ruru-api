@@ -13,14 +13,6 @@ class Login extends Controller {
       echo json_encode($login);
       exit;
     }
-
-    // $this->bodyClass = 'fixed-header';    
-    // $this->title = 'Login';
-    // $this->noMenu = true;
-    // $this->loadPage();
-    // $this->render('index');
-    // $this->loadFooter();
-
   }
 
   public function logout() {
