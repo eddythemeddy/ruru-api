@@ -1,0 +1,8 @@
+node_modules/
+libs/vendor/
+.phpintel/
+assets/public/css/style.css
+assets/dist/*/
+uploads/
+.DS_Store
+composer.lock

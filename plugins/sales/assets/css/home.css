@@ -1,0 +1,32 @@
+#main {
+	padding-top: 60px!important;
+	height: 630px!important;
+}
+
+#main h1 { 
+	line-height: 1; 
+}
+
+#marketing .member-types .feature { 
+	height: 140px;
+	width: 140px;
+	border-radius: 50%;
+	background-color: #ccc;
+	text-align: center;
+	margin: 0 auto;
+}
+
+#marketing .member-types .feature img {
+	height: 120px!important;
+    top: 10px;
+    text-align: center;
+    margin-top: 10px
+}
+
+#marketing, #features {
+	padding: 80px 0;
+}
+
+#marketing .member-types {
+	padding: 0 70px;
+}

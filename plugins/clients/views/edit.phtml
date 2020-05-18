@@ -1,0 +1,1066 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/clients/">Clients</a></li>
+    <li class="breadcrumb-item active">Edit Client</li>
+  </ol>
+</div>
+<div class="container m-t-20">  
+  <h4>Client <span class="semi-bold">Details</span></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-save-channel" method="post" autocomplete="off">
+  <?php if($this->hasOrders): ?>
+  <div class="alert alert-danger" role="alert">
+    <button class="close" data-dismiss="alert"></button>
+    <strong>NOTE: </strong>You have <strong>made orders</strong> with this client so you <strong>cannot</strong> change the name.  We do this because we are keeping historicals of your data and do not want duplicates when something is archived.
+  </div>
+  <?php endif;?>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>Name</label>
+          <?php if($this->hasOrders): ?>
+          <span class="form-control"><?=$this->channel['name'];?></span>
+          <?php else:?>
+          <input type="text" id="name" name="name" autocomplete="off" class="form-control" value="<?=$this->channel['name'];?>">
+          <?php endif;?>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Country</label>
+          <select class="form-control" data-init-plugin="select2" id="countryDD" name="country" style="width: 100%;">
+            <option value="">Select One</option>
+              <?php echo $this->countriesDD; ?>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>Address</label>
+          <input type="hidden" id="city" name="city" value="<?=$this->channel['city'];?>">
+          <input type="hidden" id="lat" name="lat" value="<?=$this->channel['lat'];?>">
+          <input type="hidden" id="long" name="long" value="<?=$this->channel['long'];?>">
+          <input type="text" id="client-add" name="client-add" autocomplete="off" class="form-control" value="<?=$this->channel['address'];?>">
+        </div>
+        <div class="form-group required">
+          <label>Description</label>
+          <textarea type="text" id="description" name="description" autocomplete="off" class="form-control"><?=str_replace("\\r\\n","\r\n",$this->channel['description']);?></textarea>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>Main Contact</label>
+          <input type="text" id="mainContact" name="mainContact" autocomplete="off" class="form-control" value="<?=$this->channel['main_contact'];?>">
+        </div>
+        <div class="form-group required">
+          <label>Phone</label>
+          <input type="text" id="phone" name="phone" autocomplete="off" class="form-control" value="<?=$this->channel['phone'];?>">
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <h4>Calender <span class="semi-bold">UI</span></h4>
+    <div class="row">      
+      <div class="col-md-6">
+        <div class="row">
+          
+        <div class="col-md-6">
+          <div class="form-group required">
+            <label>Channel Background Color</label>
+            <input type="text" id="channelColor" name="channelColor" autocomplete="off" class="form-control colorPicker" value="<?=$this->channelBgColor;?>">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group required">
+            <label>Channel Text Color</label>
+            <input type="text" id="channelTextColor" name="channelTextColor" autocomplete="off" class="form-control colorPicker" value="<?=$this->channelTextColor;?>">
+          </div>
+        </div>
+        </div>
+      </div>      
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>Calendar Sample</label>
+          <div class="card calendar-sample" style="border-radius: .25rem; background-color: <?=$this->channelBgColor;?>">
+            <div class="fc-content padding-10">
+              <div class="font-montserrat">
+                <span class="fc-11 bold calendar-text" style="color: <?=$this->channelTextColor;?>">7:00 - 9:00</span>
+                <span class="block hint-text calendar-text" style="color: <?=$this->channelTextColor;?>"><?=$this->channel['name'];?></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <h4>Client <span class="semi-bold">Forecasting</span></h4>
+    <div class="row">
+      <div class="col-md-3">
+        <input type="checkbox" id="isWeekly" name="isWeekly" data-init-plugin="switchery" name="repeat"
+        <?php if($this->channel['isWeekly'] == 1):?>
+          checked
+        <?php endif;?>
+        />
+        &nbsp;Every Week
+      </div>
+      <div class="col-md-9">
+        <div class="checkbox check-success" id="weeklyPlan" 
+        <?php if($this->channel['isWeekly'] == 0):?>
+          style="display:none;"
+        <?php endif;?>>
+          <script>
+            var days_plan = <?=json_encode($this->dayPlanner);?>;
+          </script>
+          <table class="table table-bordered">
+            <tr>
+              <th class="text-center bg-info-lighter text-whites">Day</th>
+              <th class="text-center bg-info-lighter text-whites">Start Time</th>
+              <th class="text-center bg-info-lighter text-whites">To Time</th>
+              <th class="text-center bg-info-lighter text-whites">Event Type</th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;">    
+                <input type="checkbox" value="Mon" id="id-Mon" name="days[]"
+                <?php if(in_array('Mon', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Mon">Mon</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Mon" data-day-type="from" name="Mon-from" id="Mon-from"
+                <?php if(!in_array('Mon', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Mon" data-day-type="to" name="Mon-to" id="Mon-to" 
+                <?php if(!in_array('Mon', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Mon-eventCheck" name="Mon-eventType" value="public"
+                <?php if(!in_array('Mon', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Mon-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Mon-eventCheck2" name="Mon-eventType" value="private"
+                <?php if(!in_array('Mon', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Mon-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;">    
+                <input type="checkbox" value="Tue" id="id-Tue" name="days[]"
+                <?php if(in_array('Tue', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Tue">Tue</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Tue" data-day-type="from" name="Tue-from" id="Tue-from" 
+                <?php if(!in_array('Tue', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Tue" data-day-type="to" name="Tue-to" id="Tue-to" 
+                <?php if(!in_array('Tue', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Tue-eventCheck" name="Tue-eventType" value="public"
+                <?php if(!in_array('Tue', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Tue-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Tue-eventCheck2" name="Tue-eventType" value="private"
+                <?php if(!in_array('Tue', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Tue-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;"> 
+                <input type="checkbox" value="Wed" id="id-Wed" name="days[]"
+                <?php if(in_array('Wed', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Wed">Wed</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Wed" data-day-type="from" name="Wed-from" id="Wed-from" 
+                <?php if(!in_array('Wed', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Wed" data-day-type="to" name="Wed-to" id="Wed-to" 
+                <?php if(!in_array('Wed', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Wed-eventCheck" name="Wed-eventType" value="public"
+                <?php if(!in_array('Wed', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Wed-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Wed-eventCheck2" name="Wed-eventType" value="private"
+                <?php if(!in_array('Wed', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Wed-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;"> 
+                <input type="checkbox" value="Thu" id="id-Thu" name="days[]"
+                <?php if(in_array('Thu', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Thu">Thu</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Thu" data-day-type="from" name="Thu-from" id="Thu-from" 
+                <?php if(!in_array('Thu', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Thu" data-day-type="to" name="Thu-to" id="Thu-to" 
+                <?php if(!in_array('Thu', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Thu-eventCheck" name="Thu-eventType" value="public"
+                <?php if(!in_array('Thu', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Thu-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Thu-eventCheck2" name="Thu-eventType" value="private"
+                <?php if(!in_array('Thu', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Thu-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;"> 
+                <input type="checkbox" value="Fri" id="id-Fri" name="days[]"
+                <?php if(in_array('Fri', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Fri">Fri</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Fri" data-day-type="from" name="Fri-from" id="Fri-from" 
+                <?php if(!in_array('Fri', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Fri" data-day-type="to" name="Fri-to" id="Fri-to" 
+                <?php if(!in_array('Fri', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Fri-eventCheck" name="Fri-eventType" value="public"
+                <?php if(!in_array('Fri', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Fri-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Fri-eventCheck2" name="Fri-eventType" value="private"
+                <?php if(!in_array('Fri', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Fri-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;"> 
+                <input type="checkbox" value="Sat" id="id-Sat" name="days[]"
+                <?php if(in_array('Sat', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Sat">Sat</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Sat" data-day-type="from" name="Sat-from" id="Sat-from" 
+                <?php if(!in_array('Sat', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Sat" data-day-type="to" name="Sat-to" id="Sat-to" 
+                <?php if(!in_array('Sat', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Sat-eventCheck" name="Sat-eventType" value="public"
+                <?php if(!in_array('Sat', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Sat-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Sat-eventCheck2" name="Sat-eventType" value="private"
+                <?php if(!in_array('Sat', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Sat-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th style="vertical-align: middle;"> 
+                <input type="checkbox" value="Sun" id="id-Sun" name="days[]"
+                <?php if(in_array('Sun', $this->days)): ?>
+                  checked="checked"
+                <?php endif;?>>
+                <label for="id-Sun">Sun</label>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Sun" data-day-type="from" name="Sun-from" id="Sun-from" 
+                <?php if(!in_array('Sun', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th><select style="width:100%;" class="select-2" data-day="Sun" data-day-type="to" name="Sun-to" id="Sun-to" 
+                <?php if(!in_array('Sun', $this->days)): ?>
+                  disabled
+                <?php endif;?>>
+                    <option value="00:00">00:00</option>
+                    <option selected value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                    <option value="02:00">02:00</option>
+                    <option value="02:30">02:30</option>
+                    <option value="03:00">03:00</option>
+                    <option value="03:30">03:30</option>
+                    <option value="04:00">04:00</option>
+                    <option value="04:30">04:30</option>
+                    <option value="05:00">05:00</option>
+                    <option value="05:30">05:30</option>
+                    <option value="06:00">06:00</option>
+                    <option value="06:30">06:30</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                  </select>
+              </th>
+              <th>
+                <div class="m-t-10 m-b-0 radio radio-primary radio-circle event-types">
+                  <input type="radio" class="user-status" id="Sun-eventCheck" name="Sun-eventType" value="public"
+                <?php if(!in_array('Sun', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Sun-eventCheck" style="margin-left: 0;">Public</label>
+                  <input type="radio" class="user-status" id="Sun-eventCheck2" name="Sun-eventType" value="private"
+                <?php if(!in_array('Sun', $this->days)): ?>
+                  disabled
+                <?php endif;?>/>
+                  <label for="Sun-eventCheck2">Private</label>
+                </div>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <?php /*
+    <hr/>
+    <h4>Channel <span class="semi-bold">Recipes</span></h4>
+
+    <select data-init-plugin="select2" style="width: 200px;">
+      <option value="">Choose</option>
+      <?php foreach($this->subRecipes as $key => $recipe): ?>
+        <optgroup label="<?=$key;?>">
+        <?php foreach($recipe as $key2 => $sub): ?>
+          <option><?=$sub['container'] . ' ' . $sub['containerSize'];?></option>
+        <?php endforeach;?> 
+      <?php endforeach;?> 
+    </select>
+    */?>
+    <hr/>
+    <div class="form-group disabled">
+      <div class="form-group xs-pt-10 text-right">
+        <a href="javascript:history.go(-1)" class="btn btn-warning btn-xl text-black pull-left">Back</a>
+        <button type="submit" class="btn btn-primary btn-xl">Save</button>
+        <a class="btn btn-danger btn-xl text-white delete-channel" disable>Delete</a>
+      </div>
+    </div>
+  </form>
+</div>

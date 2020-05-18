@@ -1,0 +1,54 @@
+<div class="container no-p-mobile-cont" style="margin-top: 100px;">
+
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-md-10">
+    <div class="card" data-social="item">
+	    <div class="card-header card-header p-t-10 p-l-15" data-social="item">
+	    	<div class="card-title" data-social="item">
+	    	Notifications
+	    	</div>
+	    </div>
+
+      <?php if(empty($this->notifications)): ?>
+        <div class="row notification-list-item">
+          <div class="col-md-12 text-center">
+            No notifications!
+          </div>
+        </div>
+      <?php endif;?>
+
+    	<?php foreach($this->notifications as $key => $notif): ?>
+
+      <div class="row notification-list-item <?=($notif['isread'] == 0 ? 'highlighted ' : '').($key < (count($this->notifications) - 1) ? 'bordered' : '');?>">
+
+      	<div class="col-lg-2 col-md-3 text-center">
+      		<div class="thumbnail-wrapper circular">
+            <a href="/<?=$notif['username'];?>">
+      			 <img width="40" height="40" alt="" data-src-retina="/uploads/<?=$notif['username'];?>/profile.jpg" data-src="/uploads/<?=$notif['username'];?>/profile.jpg" src="/uploads/<?=$notif['username'];?>/profile.jpg">
+            </a>
+      		</div>
+      	</div>
+        <div class="col-lg-8 col-md-6 p-t-10">
+          <?php 
+            if($notif['type']=='connection'):
+              echo '<h6>' . $notif['firstname'] . ' wants to connect with you!</h6>';
+            endif;
+          ?>
+      	</div>
+        <div class="col-lg-2 col-md-3 p-t-10">
+          <?php 
+            if($notif['type']=='connection'):
+              echo '<button class="btn btn-bordered btn-sm bold btn-primary">Accept</button>';
+            endif;
+          ?>
+        </div>
+      </div>
+
+      	<?php endforeach;?>
+      
+
+    </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/settings/users/">Users</a></li>
+    <li class="breadcrumb-item active">Edit User</li>
+  </ol>
+</div>
+<div class="container m-t-20">
+  <h4>Edit <span class="semi-bold"><?=$this->user['firstname'];?> <?=$this->user['lastname'];?></span>
+  <div class="pull-right">
+      <!-- <input data-id="11" value="active" id="checkbox11" class="user-status" type="checkbox"> -->
+    <div class="m-t-0 m-b-0 checkbox check-primary checkbox-circle">
+    <input type="checkbox" class="user-status" id="activeCheckbox" name="repeat"
+    <?php if($this->user['active'] == 1):?>
+      checked
+    <?php endif;?>
+    value="active"
+    />
+    <label for="activeCheckbox" class="fs-15">Active</label>
+    </div>
+  </div></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-save-user" method="post" autocomplete="off">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>First Name</label>
+        <input type="text" id="firstname" name="firstname" autocomplete="off" class="form-control" value="<?=$this->user['firstname'];?>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Last Name</label>
+        <input type="text" id="lastname" name="lastname" autocomplete="off" class="form-control" value="<?=$this->user['lastname'];?>">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Username</label>
+        <input type="text" id="username" name="username" autocomplete="off" class="form-control" value="<?=$this->user['username'];?>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Email</label>
+        <input type="email" id="email" name="email" autocomplete="off" class="form-control" value="<?=$this->user['email'];?>">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group xs-pt-10 text-right">
+    <a href="javascript:history.go(-1)" class="btn btn-warning text-black btn-xl pull-left">Back</a>
+    <button type="submit" class="btn btn-primary btn-xl">Save</button>
+    <a class="btn btn-danger text-white btn-xl delete-ingredient">Delete</a>
+  </div>
+  <hr/>
+  </form>
+</div>
+<div class="container m-t-20">
+  <h4>Change <span class="semi-bold">Password</span></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-change-password" method="post" autocomplete="off">
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>New Password</label>
+        <input type="password" id="password" name="password" autocomplete="off" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Confirm Password</label>
+        <input type="password" id="passwordConf" name="passwordConf" autocomplete="off" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group xs-pt-10 text-right">
+    <button type="submit" class="btn btn-primary btn-xl">Change</button>
+  </div>
+  <hr/>
+  </form>
+</div>

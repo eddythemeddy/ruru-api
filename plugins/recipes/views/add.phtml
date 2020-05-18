@@ -1,0 +1,49 @@
+<div class="container-xs-height full-height error-page">
+  <div class="row-xs-height">
+    <div class="col-xs-height col-middle">
+      <div class="col-md-12">
+        <h4 class="text-center m-t-10">Add <span class="semi-bold">New Recipe</span></h4>
+        <div class="error-container-innner">
+          <?php if(count($this->ingredients)): ?>
+          <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-create-recipe" method="post" autocomplete="off">
+            <input type="hidden" id="ingredientsArray" name="ingredientsArray">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="name" name="name" required="" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="description" name="description" required="" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="category" name="category" required="" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Ingredients</label><br/>
+              <div id="ingredient-holder"></div>
+              <div class="m-b-20 block">
+                <select id="ingredient" class="form-control" style="width: 100%; margin-bottom:10px;">
+                  <?php foreach($this->ingredients as $ing): ?>
+                    <option value="<?=$ing['id'];?>" data-ppw="<?=$ing['ppw'];?>"><?=$ing['name'];?> ($<?=$ing['ppw'];?> p/g)</option>
+                  <?php endforeach;?>
+                </select>
+                <a id="add-ingredient" class="text-white pull-right btn btn-xs btn-primary">+&nbsp;Add Ingredient</a>
+                <br/>
+              </div>
+            </div>
+            <div class="form-group xs-pt-10">
+              <button type="submit" class="btn btn-block btn-primary btn-xl">Create</button>
+            </div>
+          </form>
+          <?php else:?>
+            <div class="alert alert-danger" role="alert">
+              <button class="close" data-dismiss="alert"></button>
+              <strong>NOTE: </strong>You have <strong>No Ingredients</strong>. Please <a href="/ingredients/add">add ingredients</a> first to create a recipe.
+            </div>
+          <?php endif;?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,250 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/sales/">Sales</a></li>
+    <li class="breadcrumb-item active">Resolve</li>
+  </ol>
+</div>
+<div class="container-fluid m-t-20">
+	<div class="row">
+		<div class="col-md-12 m-b-20">
+			<div class="full-width">
+				<h4 class="m-b-0 inline pull-left">
+					Order #<span class="semi-bold inline"><?=$this->eventId;?></span>
+				</h4>
+			</div>
+		</div>
+	</div> <!-- end row -->
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="card">
+				<div class="card-header p-t-0 p-b-0">
+					<h5 class="text-primary pull-left fs-12 bold"><i class="fa fa-info-circle"></i>&nbsp;Order Details</h5>
+				</div>
+				<div class="card-body">
+				<hr class="no-margin" />
+					<div class="p-l-0 p-r-0 p-t-0">
+							<h5 class="text-success m-b-0"><?=$this->event['client'];?></h5>
+							<label class="hint-text m-b-0">Location</label>
+							<p class="l-h-1"><?=$this->model->prettifyAddress($this->event['clientAddress']);?></p>
+							<label class="hint-text m-b-0">Date</label>
+							<p class="inline-block l-h-1 m-t-0">
+								<?=$this->event['datePretty'];?>   	
+							</p>
+							<label class="hint-text m-b-0">Time</label>
+							<p class="inline-block l-h-1 m-t-0">
+							    <?=$this->event['start_time'];?> -
+								<?=$this->event['end_time'];?> 	
+								<span class="pull-right">
+									<?=$this->model->eventStatusPretty($this->event['event_status']);?>
+								</span>
+							</p>
+							<label class="hint-text m-b-0">Status</label>
+							<div class="m-b-10 block">
+								<?=$this->event['paidPretty'];?>
+							</div>
+							<label class="hint-text small m-b-0">Event Type</label>
+							<div class="m-b-20 block">
+								<?=$this->event['eventType'];?>
+							</div>
+							<hr/>
+							<h5 class="m-t-0 m-b-0 pull-left inline">
+								<label class="hint-text f-10 m-b-0 block">Projected</label>
+								<span id="net-total" class="before-dollar"><?=number_format($this->event['total'], 2);?></span>
+							</h5>
+							<?php if($this->event['event_type'] == 'public'): ?>
+							<div class="text-right pull-right fs-15 inline">
+								
+								<h5 class="m-t-0 text-primary m-b-0">
+									<label class="hint-text f-10 m-b-0 block">Actual</label>
+									<span id="net-total-actual" class="before-dollar"><?=number_format($this->event['totalActual'], 2);?></span>
+								</h5>
+								<small class="hint-text fs-12 block">
+									<span id="goal-actual" class="bold text-black after-percent"><?=$this->event['winRate'];?></span> of total goal
+								</small>
+							</div>
+							<?php endif;?>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- end col -->
+		<div class="col-sm-9">
+			<div class="card">  
+				<div class="card-header p-t-0 p-b-0">
+					<h5 class="text-primary pull-left fs-12 bold"><i class="fa fa-list"></i>&nbsp;Orders (<?=count($this->event['recipes']);?>)</h5>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-hover no-margin" id="forecast-recipes">
+						<thead>
+							<th class="text-black" style="width:20%;">Item</th>
+							<th class="text-center text-black">Price</th>
+							<th class="text-center text-black">Projected</th>
+							<th class="text-center text-black">Total</th>
+							<?php if($this->event['event_type'] == 'public'): ?>
+							<th class="text-center text-black actual-th">Sold</th>
+							<th class="text-center text-black actual-th">Acutal Total</th>
+							<?php endif; ?>
+						</thead>
+						<tbody>
+							<?php foreach($this->event['recipes'] as $recipe): ?>
+							<tr data-sub-recipe-id="<?=$recipe['sub_recipe_id'];?>" 
+								data-sub-recipe-price="<?=$recipe['instantaneous_subrecipe_price'];?>" 
+								data-forecast-recipe-id="<?=$recipe['forecast_recipe_id'];?>">
+								<td class="v-align-middle p-t-10 p-b-10">
+									<span class="tip" data-toggle="tooltip" data-original-title="<?=$recipe['sub_recipe_name'];?> <?=$recipe['recipe_name'];?>">
+										<small class="hint-text fs-12 block">
+										<span id="goal-actual" class="bold text-black"><?=$recipe['sub_recipe_name'];?></span><br/> 
+										<?=$recipe['recipe_name'];?>
+									</small></span> 
+								</td>
+								<td class="v-align-middle text-center text-primary p-t-10 p-b-10">
+									$<?=number_format($recipe['instantaneous_subrecipe_price'],2);?>
+								</td>
+								<td class="v-align-middle text-center text-center p-t-10 p-b-10">
+									<span class="unique-total-amount"><?=$recipe['total'];?></span>
+								</td>
+								<td class="v-align-middle p-t-10 p-b-10 text-center">
+									<span class="bold fs-15 net-price">
+										$<?=number_format($recipe['net_total'],2);?>
+									</span>
+								</td>
+								<?php if($this->event['event_type'] == 'public'): ?>
+								<td class="v-align-middle text-center text-right p-t-10 p-b-10 actual-td p-l-0 p-r-0" style="width: 200px; background-color: #f2f4f52;">
+									<div style="margin: 0 auto;width: auto;display: inline-block;">
+										<?php if($this->event['paid'] == 'unresolved') : ?>
+										<button class="pull-left amount-actual minus btn btn-primary">-</button>
+										<?php endif;?>
+										
+										<?php if($this->event['paid'] == 'unresolved') : ?>
+										<input type="number" value="<?=$recipe['total_actual'];?>" class="text-center pull-left unique-total-amount-actual">
+										<?php else:?>
+											<?=$recipe['total_actual'];?>
+										<?php endif;?>
+
+										<?php if($this->event['paid'] == 'unresolved') : ?>
+										<button class="pull-left amount-actual plus btn btn-primary">+</button>
+										<?php endif;?>
+									</div>
+								</td>
+								<td class="v-align-middle p-t-10 p-b-10 actual-td text-center" style="background-color: #f2f4f52;">
+									<span>$</span>
+									<span class="fs-s pull-risght net-price-actual">
+										<?=number_format($recipe['net_total_actual'],2);?>
+									</span>
+								</td>
+								<?php endif;?>
+							</tr>
+							<?php endforeach;?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="pull-left">
+				Missing something on your list? Update your order list <a class="btn btn-xs btn-info" href="/forecast/event/<?=$this->eventId;?>">here</a>
+			</div>
+			<?php if($this->event['event_type'] == 'public'): ?>
+			<a class="btn btn-danger btn-sm text-white pull-right q " id="close-sale-public">
+			<!-- <i class="flaticon flaticon-piggy-bank"></i> --><?php if($this->event['paid'] == 'resolved') { echo 'Resolved'; } else { echo 'Resolve'; }; ?>
+			</a>
+			<?php else:?>
+			<div class="btn-groups pull-right">
+				<a class="btn btn-outline btn-danger btn-sm <?php if($this->event['paid'] == 'resolved') : ?> disabled <?php endif;?> text-white" id="close-sale-private">
+				<!-- <i class="flaticon flaticon-piggy-bank"></i> --><?php if($this->event['paid'] == 'resolved') { echo 'Resolved'; } else { echo 'Resolve'; }; ?>
+				</a>
+				<a class="btn btn-info btn-sm text-white" href="<?=_SITEROOT_;?>sales/invoice/<?=$this->eventId;?>">
+					<!-- <i class="flaticon flaticon-piggy-bank"></i> -->View Invoice
+				</a>
+			</div>
+			<?php endif;?>
+		</div> <!-- end col -->
+	</div> <!-- end row -->
+</div> <!-- end container -->
+
+<!-- modal -->
+<div aria-hidden="false" class="modal fade slide-up" id="invoice-payment-modal" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content-wrapper">
+      <div class="modal-content">
+        <div class="modal-header clearfix text-left">
+          <button aria-hidden="true" class="close" data-dismiss="modal" type="button"><i class="pg-close fs-14"></i></button>
+          <h5>Pay <span class="semi-bold">Invoice</span></h5>
+          <p class="p-b-10">For Invoice <strong><?=$this->eventId;?></strong></p>
+        </div>
+        <div class="modal-body">
+          <form role="form" id="form-modal-transaction">
+		    <?php if($this->event['paid'] == 'unresolved'): ?>
+	          	<div class="alert alert-danger" role="alert">
+			    <strong>NOTE: </strong>"Closing a sale" is assuming the <strong>FULL AMOUNT</strong> of <strong>$<?=number_format($this->event['total'],2);?></strong> has been paid.
+			  	</div>
+		  	<?php else:?>
+	          	<div class="alert alert-success" role="alert">
+			    <strong>NOTE: </strong>Invoice has been paid.
+			  	</div>
+		  	<?php endif;?>
+	        <table class="table" id="transactionsTable">
+	        	<thead>
+		        	<tr>
+		        		<th>Date</th>
+		        		<th>Reference</th>
+		        		<th>Method</th>
+		        		<th>Submitted By</th>
+		        	</tr>
+		        </thead>
+		        <tbody class="loading">
+		        </tbody>
+	        </table>
+	        <?php if($this->event['paid'] == 'unresolved'): ?>
+	        <div class="m-t-50 invoice-payment-form">
+
+	          <div class="row">
+	            <div class="col-md-4">
+	              <div class="form-group">
+	                <label>Date of Payment</label> 
+	                <input class="form-control" type="text" name="date-of-payment" id="date-of-payment" required>
+	              </div>
+	            </div>
+	            <div class="col-md-4">
+	              <div class="form-group">
+	                <label>Transaction Reference</label> 
+	                <input class="form-control" type="text" name="transaction-reference" id="transaction-reference" required>
+	              </div>
+	            </div>
+	            <div class="col-md-4">
+	              <div class="form-group required">
+	                <label>Method of Payment</label>
+	                <select data-init-plugin="select2" name="method" class="full-width select2-hidden-accessible" aria-hidden="true" tabindex="-1" data-disable-search="true" >
+	                	<option value="">Choose</option>
+	                	<option>Debit</option>
+	                	<option>Wire Transfer</option>
+	                	<option>Credit Card</option>
+	                	<option>Cash</option>
+	                	<option>Cheque</option>
+	                </select>
+	              </div>
+	            </div>
+	          </div>
+
+	        </div>
+	    <?php endif;?>
+	        <div class="row">
+	            <div class="col-md-8">
+	              <div class="p-t-20 clearfix p-l-10 p-r-10">
+	                <div class="pull-right">
+	                  <p class="bold font-montserrat text-uppercase inline">Total</p>
+	                  <p class="bold font-montserrat text-uppercase inline">$<?=number_format($this->event['total'],2);?></p>
+	                </div>
+	              </div>
+	            </div>
+	            <?php if($this->event['paid'] == 'unresolved'): ?>
+	            <div class="col-md-4 m-t-10 sm-m-t-10">
+	              <button class="btn btn-primary btn-block m-t-5" type="submit">Submit and Close</button>
+	            </div>
+	        	<?php endif;?>
+	        </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

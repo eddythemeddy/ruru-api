@@ -1,0 +1,31 @@
+<div class="email-composer container-fluid">
+  <div class="row">
+  <form autocomplete="off" id="form-mail" class="full-width">
+    <div class="col-md-12 no-padding">
+      <div class="wysiwyg5-wrapper email-toolbar-wrapper"></div>
+        <input type="hidden" id="to_id" name="to_id">
+        <div class="form-group-attached">
+          <div class="row clearfix">
+            <div class="col-md-12">
+              <div class="form-group form-group-default">
+                <label>TO:</label> <input class="form-control tagsinput" data-role="tagsinput" name="to" type="text">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-default">
+            <label>Subject</label> <input class="form-control" name="subject" type="text">
+          </div>
+        </div>      
+        <div class="form-group form-group-default email-body-wrapper">
+          <textarea class="email-body" name="body" style="height:350px" required></textarea>
+        </div>
+    </div>
+  </div>
+  <div class="row p-b-20">
+    <div class="col-md-11 d-md-flex d-lg-flex d-xl-flex d-block pull-right">
+      <a class="btn btn-danger btn-cons text-white" id="cancel-compose">Cancel</a>
+      <button class="btn btn-primary btn-cons m-l-10" type="submit" id="send-mail"><i class="flaticon flaticon-sent-mail"></i>Send</button>
+    </div>
+  </div>
+  </form>
+</div>

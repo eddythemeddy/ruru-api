@@ -1,0 +1,87 @@
+<div id="searchFilters">
+  <div class="container">
+
+    <!-- <div class=""><h5>Filters</h5></div> -->
+
+    <div class="actors-dropdown">
+      <select class="no-search" style="width: 100px; visibility: hidden;" id="search-type">
+        <option value="people" <?=($this->searchType == 'people'?'selected':'');?>>People</option>
+        <option value="trials" <?=($this->searchType == 'trials'?'selected':'');?>>Trials</option>
+      </select>
+    </div>
+    
+    <div class="select-seperator"></div>
+    <input type="text" class="form-control search-text" value="<?=$this->name;?>" placeholder="Keyword..">
+    
+    <select style="width: 100px; visibility: hidden;" class="search-select no-search" data-def="playerType">
+      <option value="">All</option>
+      <option value="Player" <?=($this->playerType == 'Player'?'selected':'');?>>Player</option>
+      <option value="Coach" <?=($this->playerType == 'Coach'?'selected':'');?>>Coach</option>
+      <option value="Scout" <?=($this->playerType == 'Scout'?'selected':'');?>>Scout</option>
+      <option value="Agent" <?=($this->playerType == 'Agent'?'selected':'');?>>Agent</option>
+    </select>
+    
+    <div class="country-dropdown">
+      <select class="search-select with-search" data-def="location" data-id="location-dd" name="location-dd" style="visibility: hidden;"> 
+        <option value="">All</option>
+        <?=$this->countries;?>
+      </select>
+    </div>
+    
+    <?php if($this->playerType == 'Player') : ?>
+    <div class="">
+      <select class="search-select no-search" data-def="gender" data-id="gender-dd" name="gender-dd" style="visibility: hidden; width: 100px;"> 
+        <option value="">All</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <?php endif;?>
+
+  </div>
+</div>
+
+<div class="container no-p-mobile-cont">
+
+  <div class="row h-100 justify-content-center align-items-center searchContainer">
+    <div class="col-lg-12 col-md-10">
+      
+      <div class="card panel-default">
+        <div class="card-header">
+          <div class="card-title"><?=$this->total;?>
+        </div>
+        <div class="card-body">
+          <?php foreach($this->results['result'] as $member): ?>
+          <div class="row member-row">
+            <div class="col-lg-1 col-md-2 search-gap">
+              <a href="<?=_SITEROOT_.$member['username'];?>">
+                <div class="thumbnail-wrapper d60 circular bordered b-white cursor">
+                  <img alt="Avatar" width="55" height="55" data-src-retina="<?=_SITEROOT_;?>uploads/<?=$member['username'];?>/profile.jpg" data-src="<?=_SITEROOT_;?>uploads/<?=$member['username'];?>/profile.jpg" src="<?=_SITEROOT_;?>uploads/<?=$member['username'];?>/profile.jpg">
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-8 col-md-8 search-gap">
+              <a href="<?=_SITEROOT_.$member['username'];?>"><h6 class="text-primary"><?php echo $member['firstname'] . ' ' . $member['lastname'];?></h6></a>
+              <p><?=ucfirst($member['type']);?> at West Bromwich</p>
+              <small><?=$member['city_full'];?></small>
+            </div>
+            <div class="col-lg-3 col-md-2 search-gap">
+              <?php if($this->person != $member['id']): ?>
+                <button class="btn btn-primary btn-bordered pull-right button-connect"><i class="fa fa-wifi"></i>Connect</button>
+              <?php endif;?>
+            </div>
+          </div>
+          <hr/>
+          <?php endforeach;?>
+        </div>
+        <div class="dataTables_wrapper">
+          <div class="dataTables_paginate paging_bootstrap pagination m-t-0 p-b-20 p-r-0 w-100" id="tableWithExportOptions_paginate">
+            <?=$this->pagination;?>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>

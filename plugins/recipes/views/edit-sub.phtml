@@ -1,0 +1,95 @@
+<div class="container-fluid m-t-20">
+  <h4>Edit <span class="semi-bold"><span id="label-container-size"><?=$this->recipeDetails['container_size'];?>oz</span> <span id="label-container"><?=$this->recipeDetails['container'];?></span>&nbsp;<?=$this->recipeDetails['name'];?> </span></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-save-sub-recipe" method="post" autocomplete="off">
+  <?php if($this->hasOrders): ?>
+  <div class="alert alert-danger" role="alert">
+    <button class="close" data-dismiss="alert"></button>
+    <strong>NOTE: </strong>You have <strong>made orders</strong> with this variation of <strong><?=$this->recipeDetails['container_size'];?>oz <?=$this->recipeDetails['name'];?> <?=$this->recipeDetails['container'];?> </strong>, thus you can <strong class="text-uppercase">no longer change</strong> the <strong>container type</strong> or <strong>container size</strong> here. If you want to change it, please <strong>create a new sub recipe</strong> with those variations of container types and sizes.  We do this because we are keeping historicals of your data and do not want duplicates when something is archived.
+  </div>
+  <?php endif;?>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Container</label>
+        <?php if($this->hasOrders): ?>
+          <span class="form-control"><?=$this->recipeDetails['container'];?></span>
+        <?php else: ?>
+          <select name="container" class="select-2" style="width: 100%;">
+            <option <?=($this->recipeDetails['container'] == 'Bottle' ? 'selected' : '');?>>Bottle</option>
+            <option <?=($this->recipeDetails['container'] == 'Cup' ? 'selected' : '');?>>Cup</option>
+            <option <?=($this->recipeDetails['container'] == 'Bowl' ? 'selected' : '');?>>Bowl</option>
+          </select>
+        <?php endif;?>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label class="required">Container Size (oz)</label>
+        <?php if($this->hasOrders): ?>
+          <span class="form-control"><?=$this->recipeDetails['container_size'];?></span>
+        <?php else: ?>
+          <input type="number" id="containerSize" name="containerSize" required="" autocomplete="off" class="form-control" value="<?=$this->recipeDetails['container_size'];?>">
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Price ($)</label>
+        <input type="text" id="price" name="price" required="" autocomplete="off" class="form-control" value="<?=$this->recipeDetails['price'];?>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Loss Variable (%)</label>
+        <input type="number" id="loss_variable" name="loss_variable" required="" autocomplete="off" class="form-control" value="<?=$this->recipeDetails['loss_variable'];?>">
+      </div>
+    </div>
+  </div>
+  <div class="form-group xs-pt-10 text-right">
+    <a href="javascript:history.go(-1)" class="btn btn-warning text-black btn-xl pull-left">Back</a>
+    <button type="submit" class="btn btn-primary btn-xl">Save</button>
+    <a class="btn btn-danger text-white btn-xl delete-ingredient">Archive</a>
+  </div>
+  <hr/>
+  <h4>Ingredient <span class="semi-bold">Weights</span></h4>
+  <div class="row">
+  <?php 
+
+
+  foreach($this->recipeDetails['ingredients'] as $key => $ingredient): ?>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label><?=$ingredient['name'];?> Weight (gms)</label>
+          <input type="number" 
+                 id="price_<?=$ingredient['id'];?>" 
+                 name="price_<?=$ingredient['id'];?>"
+                 data-ppw="<?=$ingredient['price'];?>" 
+                 autocomplete="off" 
+                 class="form-control"
+                 value="<?=$ingredient['weight'];?>">
+        </div>            
+      </div>
+      <?php $key++; 
+      if($key % 4 == 0) : ?>
+        </div><div class="row">
+      <?php endif; ?>
+  <?php endforeach;?>
+  </div>
+  </form>
+  <hr/>
+  <h6 style="line-height: 0.6" id="expense">
+    <strong class="fs inline">Total Expense: </strong>
+    &nbsp;&nbsp;<span class="label label-danger" style="font-size: 14px;; display: inline-block">$0.00</span>
+  </h6>
+  <h6 style="line-height: 0.6;" id="weight">
+    <strong class="fs inline">Total Weight: </strong>
+    &nbsp;&nbsp;<span class="label label-default" style="font-size: 14px; display: inline-block">0g</span>
+  </h6>
+  <h6 style="line-height: 0.6;" id="profit">
+    <strong class="fs inline">Total Profit: </strong>
+    &nbsp;&nbsp;<span class="label label-info" style="font-size: 14px;; display: inline-block">$0.00</span>
+  </h6>
+</div>
+

@@ -1,0 +1,192 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active">Home</li>
+  </ol>
+</div>
+<div class="container-fluid filter-container">
+	<div class="select2-filter-container">
+		<div class="row">
+				
+			<div class="p-b-20 p-l-0">
+				<select data-init-plugin="select2" data-disable-search="true" id="dateRangeDD" style="width: 200px;">
+					<option value="1,months">Last 1 Month</option>
+					<option value="2,months">Last 2 Months</option>
+					<option value="3,months">Last 3 Months</option>
+					<option value="6,months" selected>Last 6 Months</option>
+					<option value="1,years">Last 1 Year</option>
+					<option value="2,years">Last 2 Year</option>
+					<option value="5,years">Last 5 Year</option>
+				</select>
+				<select data-init-plugin="select2" data-disable-search="true" id="eventTypeDD" style="width: 200px;">
+					<option value="">Public & Private</option>
+					<option value="public">Public</option>
+					<option value="private">Private</option>
+				</select>
+				<!-- <select data-init-plugin="select2" data-disable-search="true" id="paidDD" style="width: 200px;">
+					<option value="">Paid and Unpaid</option>
+					<option value="1">Paid</option>
+					<option value="0">Unpaid</option>
+				</select> -->
+				<select data-init-plugin="select2" data-disable-search="true" id="clientDD">
+					<option value="">All clients</option>
+				<?php foreach($this->channels as $channel): ?>
+					<option value="<?=$channel['id'];?>"><?=$channel['name'];?></option>
+				<?php endforeach;?>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid p-t-20 analytics-container">
+	
+	<div class="row">
+
+		
+
+		
+	<div class="col-md-2">			
+			<div class="card social-card share  full-width m-b-10 no-border" id="lastweek">
+				<div class="card-description">
+					<h5 class="no-margin">Last Week</h5>
+					<h3 class="bold no-margin p-b-5">$<span>0.00</span></h3>
+						
+					<small class="pull-right text-right fs-12 inline" style="position:">
+						<span class="bold unpaid total-goal-perc">0.00</span>% of $<span class="total-goal">0.00</span> reached
+					</small>
+				</div>
+				<div class="progress progress-small no-margin">
+					<div class="progress-bar progress-bar-danger" style="width: 0%;"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-2">			
+			<div class="card social-card share  full-width m-b-10 no-border" id="thisweek">
+				<div class="card-description">
+					<h5 class="no-margin">This Week</h5>
+					<h3 class="bold no-margin p-b-5">$<span>0.00</span></h3>
+						
+					<small class="pull-right text-right fs-12 inline" style="position:">
+						<span class="bold unpaid total-goal-perc">0.00</span>% of $<span class="total-goal">0.00</span> reached
+					</small>
+				</div>
+				<div class="progress progress-small no-margin">
+					<div class="progress-bar progress-bar-danger" style="width: 0%;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="card social-card share  full-width m-b-10 no-border" id="companymain">
+				<div class="card-description">
+					<h5 class="no-margin text-right">Total Actual Sales</h5>
+					<h3 class="m-b-0 m-t-0 p-b-5 text-right">
+						<span class="text-complete bold">$<span class="total">0.00</span></span>
+						
+					</h3>
+					<small class="pull-right text-right fs-12 inline">
+						<span class="fs-12 improvement hint-text">
+							<i class="fa"></i> 
+							<span class="bold">0.00</span>% of goal reached
+						</span>
+					</small>
+				</div>
+				<div class="progress progress-small no-margin">
+					<div class="progress-bar progress-bar-danger" style="width: 20%;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="card social-card share  full-width m-b-10 no-border" id="companyforcasted">
+				<div class="card-description">
+					<h5 class="no-margin text-right">Total Forecasted</h5>
+					<h3 class="m-b-0 m-t-0 p-b-5 text-right">
+						<span class="hint-text bold">$<span class="total">0.00</span></span>
+					</h3>
+					<small class="pull-right text-right fs-12 inline">
+						<span class="fs-12 improvement hint-text">
+							<i class="fa"></i> 
+							<span class="bold">0.00</span>% since last week
+						</span>
+					</small>
+				</div>
+				<div class="progress progress-small no-margin">
+					<div class="progress-bar progress-bar-danger" style="width: 20%;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">			
+			<div class="card social-card share  full-width m-b-10 no-border" id="companyOrders">
+				<div class="card-description">
+					<h5 class="no-margin text-right">Total Orders</h5>
+					<h3 class="m-b-0 m-t-0 p-b-5 text-right">
+						<span class="text-primary bold"><span class="total">0</span></span>
+					</h3>
+					<div class="pull-right text-right fs-12">
+						<span class="bold unpaid">0</span> unpaid 
+						<span class="bold paid">0</span> paid
+						<span class="bold upcoming">0</span> new
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="col-lg-4 col-sm-6 d-flex flex-column">
+
+			<div class="card no-border widget-loader-bar m-b-10 full-width" id="nextweek">
+				<div class="container-xs-height full-height">
+					<div class="row-xs-height">
+						<div class="col-xs-height col-top">
+							<div class="card-header top-left top-right">
+								<div class="card-title">
+									<span class="font-montserrat fs-11 all-caps">Next Week's Projection <i class="fa fa-chevron-right"></i></span>
+								</div>
+								<div class="card-controls">
+									<ul>
+										<li>
+											<a class="portlet-refresh text-black" data-toggle="refresh" href="#"><i class="portlet-icon portlet-icon-refresh"></i></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row-xs-height">
+						<div class="col-xs-height col-top">
+							<div class="p-l-20 p-t-50 p-b-40 p-r-20">
+								<h3 class="bold no-margin p-b-5">$<span>0.00</span></h3>
+								<span class="pull-left"><span class="total-goal-perc">0.00</span>% of total goal</span> 
+								<span class="pull-right semi-bold text-primary">$<span class="total-goal">0.00</span></span>
+							</div>
+						</div>
+					</div>
+					<div class="row-xs-height">
+						<div class="col-xs-height col-bottom">
+							<div class="progress progress-small m-b-0">
+								<div class="progress-bar progress-bar-info" style="width:0%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> 
+
+		</div> -->
+	</div>
+	<div class="row">
+		<div class="col-md-12 p-b-0">
+			<div class="card social-card share  full-width m-b-10 no-border p-t-10 p-b-0">
+				<div id="container" style="height: 400px;"></div>
+			</div>
+		</div>
+	</div>
+		<div class="row">
+
+		<?php $this->render('projects-widget');?>
+
+		
+
+		
+		<div class="col-md-3">
+			
+		</div>
+	</div>
+
+</div>

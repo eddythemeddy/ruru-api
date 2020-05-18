@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active">Settings</li>
+  </ol>
+</div>
+<div class="container m-t-20">
+  <h4>Edit <span class="semi-bold">Company</span></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-save-company" method="post" autocomplete="off">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Company Name</label>
+        <input type="text" id="name" name="name" autocomplete="off" class="form-control" value="<?=$this->company['name'];?>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Company</label>
+        <select class="form-control" data-init-plugin="select2" id="countryDD" name="country" style="width: 100%;" required>
+        <option value="">Select One</option>
+          <?php echo $this->countriesDD; ?>
+      </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Address</label>
+          <input type="hidden" id="city" name="city" value="<?=$this->company['city'];?>">
+          <input type="hidden" id="lat" name="lat" value="<?=$this->company['lat'];?>">
+          <input type="hidden" id="long" name="long" value="<?=$this->company['long'];?>">
+          <input type="text" id="company-add" name="company-add" autocomplete="off" class="form-control" value="<?=$this->company['address'];?>" 
+          <?php if(empty($this->company['country'])) : ?>
+            disabled="disabled"
+          <?php endif; ?>
+            >
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Time Zone</label>        
+          <input type="hidden" id="timezone" name="timezone" value="<?=$this->company['timezone'];?>">
+          <input type="hidden" id="timezoneHour" name="timezoneHour" value="<?=$this->company['timezone_hour'];?>">
+          <span id="timezoneHourSpace" class="form-control"><?=$this->company['timezone_hour'];?></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Phone Number</label>
+        <input type="text" id="phone" name="phone" autocomplete="off" class="form-control" value="<?=$this->company['phone_number'];?>">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Email</label>
+        <input type="email" id="email" name="email" autocomplete="off" class="form-control" value="<?=$this->company['email'];?>">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group xs-pt-10 text-right">
+    <a href="javascript:history.go(-1)" class="btn btn-warning text-black btn-xl pull-left"><i class="fa fa-chevron-left"></i> Back</a>
+    <button type="submit" class="btn btn-primary btn-xl"><i class="fa fa-save"></i> Save</button>
+  </div>
+  <hr/>
+  </form>
+</div>

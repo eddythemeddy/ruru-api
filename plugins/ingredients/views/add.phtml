@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/recipes/">Recipes</a></li>
+    <li class="breadcrumb-item"><a href="/ingredients/">Ingredients</a></li>
+    <li class="breadcrumb-item active">Add Ingredient</li>
+  </ol>
+</div>
+<div class="container-xs-height full-height error-page">
+  <div class="row-xs-height">
+    <div class="col-xs-height col-middle">
+      <div class="col-md-12">
+        <h4 class="text-center m-t-10">Create <span class="semi-bold">Ingredient</span></h4>
+        <div class="error-container-innner">
+          <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-create-ingredient" method="post" autocomplete="off">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="name" name="name" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Price per gram ($)</label>
+              <input type="number" id="ppg" name="ppg" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Categories</label>
+              <select id="categories" name="categories" autocomplete="off" class="form-control select-2">
+                <option value="">Choose One...</option>
+                <option>Vegetables (Produce)</option>
+                <option>Frozen</option>
+                <option>Meats & Poultry</option>
+                <option>Grains </option>
+                <option>Fruits</option>
+                <option>Bread & Bakery</option>
+                <option>Dairy & Cheese</option>
+                <option>Canned Goods</option>
+                <option>Nuts & Seeds</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="description" name="description" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group xs-pt-10">
+              <button type="submit" class="btn btn-block btn-primary btn-xl">Create</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

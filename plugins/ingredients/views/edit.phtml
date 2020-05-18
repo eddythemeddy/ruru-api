@@ -1,0 +1,154 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/recipes/">Recipes</a></li>
+    <li class="breadcrumb-item"><a href="/ingredients/">Ingredients</a></li>
+    <li class="breadcrumb-item active">Edit Ingredient</li>
+  </ol>
+</div>
+<div class="container-fluid m-t-20">
+  <h4>Edit <span class="semi-bold"><?=$this->ingredient['name'];?></span></h4>
+  <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-save-ingredient" method="post" autocomplete="off">
+  <div class="alert alert-danger" role="alert">
+    <button class="close" data-dismiss="alert"></button>
+    <strong>NOTE: </strong>You cannot change the name of an ingredient as all names are required for historicals.  <br/>If you feel you have made a <strong>MISTAKE</strong>, please <strong>ARCHIVE</strong> this and create a new ingredient
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Name</label>
+        <span type="text" class="form-control"><?=$this->ingredient['name'];?></span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Categories </label>
+        <select id="categories" name="categories" autocomplete="off" class="select2" style="width:100%;">
+          <option value="">Choose One...</option>
+          <option <?=($this->ingredient['categories'] == 'Vegetables (Produce)' ? 'selected' : '');?>>Vegetables (Produce)</option>
+          <option <?=($this->ingredient['categories'] == 'Frozen' ? 'selected' : '');?>>Frozen</option>
+          <option <?=($this->ingredient['categories'] == 'Meats & Poultry' ? 'selected' : '');?>>Meats & Poultry</option>
+          <option <?=($this->ingredient['categories'] == 'Grains' ? 'selected' : '');?>>Grains </option>
+          <option <?=($this->ingredient['categories'] == 'Fruits' ? 'selected' : '');?>>Fruits</option>
+          <option <?=($this->ingredient['categories'] == 'Bread & Bakery' ? 'selected' : '');?>>Bread & Bakery</option>
+          <option <?=($this->ingredient['categories'] == 'Dairy & Cheese' ? 'selected' : '');?>>Dairy & Cheese</option>
+          <option <?=($this->ingredient['categories'] == 'Canned Goods' ? 'selected' : '');?>>Canned Goods</option>
+          <option <?=($this->ingredient['categories'] == 'Nuts & Seeds' ? 'selected' : '');?>>Nuts & Seeds</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label>Description</label>
+        <textarea type="text" id="description" name="description" autocomplete="off" class="form-control"><?=str_replace("\\r\\n","\r\n",$this->ingredient['description']);?></textarea>
+      </div>
+    </div>
+    <div class="col-md-6">
+    </div>
+  </div>
+  <div class="form-group xs-pt-10 text-right">
+    <a href="javascript:history.go(-1)" class="btn btn-warning text-black btn-xl pull-left">Back</a>
+    <button type="submit" class="btn btn-primary btn-xl">Save</button>
+    <a class="btn btn-danger text-white btn-xl delete-ingredient">Delete</a>
+  </div>
+  </form>
+  <hr/>
+  <h4>Ingredient <span class="semi-bold">Variations</span></h4>
+  <p class="hint-text m-b-0 pull-left inline"><strong>Ingredient variations</strong> are your different sources of <strong>where</strong> you buy your product and the <strong>brand</strong> and <strong>weight</strong>.</p>
+  <a class="btn btn-primary text-white btn pull-right" id="btnToggleSlideUpSize">Create Ingredient Variation</a>
+  <br/>
+  <br/>
+  <div class="table-responsive">
+    <div class="table-overlay" style="display: block;"></div>
+      
+    <table class="table full-width" id="ingredient-variations">
+      <thead>
+        <tr>
+          <th class="text-left">Origin - Brand/Package</th>
+          <th class="text-left">Package Weight</th>
+          <th class="text-left">Price</th>
+          <th class="text-left">Price Per Gram</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<div aria-hidden="false" class="modal fade slide-up disable-scroll" id="modalSlideUp" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content-wrapper">
+      <div class="modal-content">
+        <div class="modal-header clearfix text-left">
+          <button aria-hidden="true" class="close" data-dismiss="modal" type="button"><i class="pg-close fs-14"></i></button>
+          <h5>Ingredient <span class="semi-bold">Variation</span></h5>
+          <p class="p-b-10">We need payment information inorder to process your order</p>
+        </div>
+        <div class="modal-body">
+          <form role="form" id="form-modal-ingredient">
+            <input type="hidden" value="" id="variation-id" name="variation-id">
+            <div class="form-group-attached">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group form-group-default">
+                    <label>Shop</label> 
+                    <input class="form-control" type="type" id="shop" name="shop" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group form-group-default">
+                    <label>Brand</label> 
+                    <input class="form-control" type="text" id="brand" name="brand" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group form-group-default">
+                    <label>Package</label> 
+                    <input class="form-control" type="text" id="package" name="package" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group form-group-default">
+                    <label>Package Weight (gms)</label> 
+                    <input class="form-control" type="number" name="weight" id="weight" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group form-group-default">
+                    <label>Price</label> 
+                    <input class="form-control" type="number" name="price" id="price" required>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="p-t-20 clearfix p-l-10 p-r-10">
+                <div class="pull-left">
+                  <p class="bold font-montserrat text-uppercase">Price Per Gram</p>
+                </div>
+                <div class="pull-right">
+                  <p class="bold font-montserrat text-uppercase" id="ppg-modal">$0.00</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 m-t-10 sm-m-t-10">
+              <button class="btn btn-primary btn-block m-t-5" type="submit">Add Variation</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/clients/">Clients</a></li>
+    <li class="breadcrumb-item active">Add Client</li>
+  </ol>
+</div>
+<div class="container-xs-height full-height error-page">
+  <div class="row-xs-height">
+    <div class="col-xs-height col-middle">
+      <div class="col-md-12">
+        <h4 class="text-center m-t-10">Add <span class="semi-bold">New Client</span></h4>
+        <div class="error-container-innner">
+          <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-create-ingredient" method="post" autocomplete="off">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="name" name="name" autocomplete="__away" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <select class="form-control select-2" id="countryDD" name="country">
+                <?php echo $this->countriesDD; ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="">Address</label>
+              <label for="" style="display: none;">hidden label to mislead chrome autocomplete</label>
+              <input type="hidden" id="city" name="city">
+              <input type="hidden" id="lat" name="lat">
+              <input type="hidden" id="long" name="long">
+              <input type="text" id="client-add" name="client-add" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Contact Name</label>
+              <input type="text" id="mainContact" name="mainContact" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="phone" name="phone" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea 
+                id="description" 
+                name="description" 
+                autocomplete="off" 
+                class="form-control"></textarea>
+            </div>
+            <div class="form-group xs-pt-10">
+              <button type="submit" class="btn btn-block btn-primary btn-xl">Create</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

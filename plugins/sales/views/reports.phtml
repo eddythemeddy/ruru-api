@@ -1,0 +1,80 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/sales/">Sales</a></li>
+    <li class="breadcrumb-item active">Reports</li>
+  </ol>
+</div>
+
+<div class="container-fluid p-t-20">
+	
+	<div class="row">	
+		<div class="filters">
+			<div class="pull-left">	
+				<small>Date Range</small><br/>
+				<input type="text" class="form-control input-sm date-range">
+			</div>
+			<div class="pull-left m-l-20">
+				<small>Event Type</small><br/>
+				<select data-init-plugin="select2" class="event-type" data-disable-search="true" style="width: 100px;">
+					<option value="">Choose</option>
+					<option value="public">Public</option>
+					<option value="private">Private</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-12 col-sm-12 d-flex flex-column">
+
+			<div class="card social-card share  full-width m-b-10 no-border" style="height: 400px;">
+				<div class="card-header">
+					<h5 class="text-primary pull-left fs-12 m-l-20 bold">Projected vs Actual Sales</h5>
+				</div>
+
+				<div class="card-body no-padding" id="salesChart"></div>
+				
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="row">
+		
+		<div class="col-lg-5 col-sm-5 d-flex flex-column">
+			<div class="card social-card share  full-width m-b-10 no-border">
+				<div class="card-header ">
+					<h5 class="text-primary pull-left fs-12">Update <i class="fa fa-circle text-complete fs-11"></i></h5>
+				</div>
+				<div class="card-description" id="chartdiv"></div>
+			</div>
+		</div>
+		
+		<div class="col-lg-7 col-sm-7  d-flex flex-column">
+			<div class="card social-card share  full-width m-b-10 no-border">
+				<div class="card-header ">
+					<h5 class="text-primary pull-left fs-12">Update <i class="fa fa-circle text-complete fs-11"></i></h5>
+					<div class="card-controls">
+						<ul>
+							<li>
+								<div class="dropdown">
+									<a aria-expanded="false" aria-haspopup="true" data-target="#" data-toggle="dropdown" href="#" id="card-settings" role="button">
+										<i class="fa fa-chevron-down"></i>
+									</a>
+									<div aria-labelledby="card-settings" class="dropdown-menu dropdown-menu-right" role="menu">
+										<a class="dropdown-item" href="#">API</a> <a class="dropdown-item" href="#">Preferences</a> <a class="dropdown-item" href="#">About</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="card-description" id="chart2div"></div>
+			</div>
+		</div>
+
+	</div>
+
+</div>

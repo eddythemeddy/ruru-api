@@ -1,0 +1,68 @@
+<div class="container-xs-height full-height error-page">
+  <div class="row-xs-height">
+    <div class="col-xs-height col-middle">
+      <div class="col-md-12">
+        <h4 class="text-center m-t-10">Add <span class="semi-bold">"<?=$this->recipeDetails['name'];?>"</span> Variation</h4>
+        <div class="error-container-innner">
+          <form action="<?=$_SERVER['REQUEST_URI'];?>" id="form-create-ingredient" method="post" autocomplete="off">
+            <div class="form-group">
+              <label>Container</label>
+              <select name="container" class="select-2" style="width: 100%;">
+                <option>Bottle</option>
+                <option>Cup</option>
+                <option>Plate</option>
+                <option>Bowl</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Container Size (oz)</label>
+              <input type="number" id="containerSize" name="containerSize" required="" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Price ($)</label>
+              <input type="number" value="0" id="price" name="price" required="" autocomplete="off" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Loss Variable (%)</label>
+              <input type="number" id="loss_variable" name="loss_variable" required="" autocomplete="off" class="form-control">
+            </div>
+            <hr/>
+            <h6>Ingredients</h6>
+            
+            <?php foreach($this->ingDetails as $ingredient): ?>
+            <div class="form-group">
+              <label><?=$ingredient['ingName'];?> Weight ($<?=$ingredient['ingredientPricePerWeight'];?> per gram)</label>
+              <input type="number" 
+                     id="price_<?=$ingredient['ingredientId'];?>" 
+                     name="price_<?=$ingredient['ingredientId'];?>"
+                     data-ppw="<?=$ingredient['ingredientPricePerWeight'];?>" 
+                     autocomplete="off" 
+                     class="form-control"
+                     value="1"
+                     required>
+            </div>            
+            <?php endforeach;?>
+
+            <hr/>
+
+            <h6 style="line-height: 0.6" id="expense">
+              <strong class="fs inline">Total Expense: </strong>
+              &nbsp;&nbsp;<span class="label label-danger" style="font-size: 14px;; display: inline-block">$0.00</span>
+            </h6>
+            <h6 style="line-height: 0.6;" id="weight">
+              <strong class="fs inline">Total Weight: </strong>
+              &nbsp;&nbsp;<span class="label label-default" style="font-size: 14px; display: inline-block">0g</span>
+            </h6>
+            <h6 style="line-height: 0.6;" id="profit">
+              <strong class="fs inline">Total Profit: </strong>
+              &nbsp;&nbsp;<span class="label label-info" style="font-size: 14px;; display: inline-block">$0.00</span>
+            </h6>
+            <hr/>
+            <div class="form-group xs-pt-10">
+              <button type="submit" class="btn btn-block btn-primary btn-xl">Create</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

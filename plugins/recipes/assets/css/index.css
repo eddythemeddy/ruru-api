@@ -1,0 +1,14 @@
+.parent-recipe, .sub-recipe-holder {
+	border-radius: 0;
+	margin-bottom: 1px;
+}
+
+.sub-recipe-holder {
+	margin-bottom: 0!important;
+	margin-top: 0!important;
+	border-top: 0!important;
+}
+
+.parent-recipes .card-group {
+	margin-bottom: 0!important;
+}

@@ -1,0 +1,71 @@
+.highcharts-credits {
+    display: none;
+}/*
+.highcharts-scrollbar-button,
+.highcharts-scrollbar-arrow,
+.highcharts-navigator-outline,
+.highcharts-scrollbar-track {
+    display: none;
+}
+.highcharts-navigator-handle {
+    cursor:ew-resize;
+    d: path("M 0 -12 L 1 -12 L 1 34 L -2.5 34 L -2.5 -12 M 1.5 -12 L -3.2 -12 M 0.5 0 L 0.5 0");    
+}
+.highcharts-navigator-mask-inside {
+    cursor: grab!important;
+}
+.highcharts-scrollbar-thumb {
+    height: 5px;
+    top: 2px;
+}
+.highcharts-scrollbar-rifles {
+    d: path("M -3 0.5 L -3 4.33333 M 0 0.5 L 0 4.33333 M 3 0.5 L 3 4.33333")
+}
+.highcharts-axis-labels text {
+    font-family: montserrat;
+}
+.highcharts-navigator-mask-outside {
+    fill: #fff;
+    width: 200px;
+} */
+#table-upcoming_info, #table-unpaid_info {
+    margin: 10px 12px;
+    display: none;
+}
+.dataTables_scrollHeadInner,
+.dataTables_scrollHeadInner table {
+    width: 100%!important;
+}
+.dataTables_scrollHead .dataTable th {
+    padding: 13px 10px 9px!important;
+}
+#table-upcoming_wrapper .dataTables_scrollHead th:nth-child(1) {
+    width:14%!important;
+}
+.dataTable td {
+    padding: 8px 10px!important;
+}
+
+#table-upcoming td:nth-child(1), #table-unpaid td:nth-child(1) {
+    width: 10%;
+    white-space: pre-line;
+    PADDING-LEFT: 20PX!important;
+}
+#table-upcoming td:nth-child(2), #table-unpaid td:nth-child(2) {
+    width: 30%;
+    max-width: 20px;
+    white-space: pre-line;
+}
+#table-upcoming td:nth-child(3), #table-unpaid td:nth-child(3) {
+    width: 30%;
+    max-width: 20px;
+    white-space: pre-line;
+}
+#table-upcoming td:nth-child(4), #table-unpaid td:nth-child(4) {
+    width: 8%;
+    max-width: 20px;
+    white-space: pre-line;
+}
+.highcharts-drilldown-data-label text {
+    text-decoration: none!important;
+}
