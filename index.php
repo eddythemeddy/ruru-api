@@ -14,7 +14,6 @@
 
 	require('libs/database.php');
 	require('libs/controller.php');
-	require('libs/navigation.php');
 	require('libs/model.php');
 
 	// Load all helpers!
