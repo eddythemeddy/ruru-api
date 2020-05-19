@@ -2,7 +2,7 @@
 
 use Postmark\PostmarkClient;
 
-class MailHelper extends View {
+class MailHelper {
 
 	const FROM_MAIL = 'info@scouty.io';
 	const FROM_NAME = 'Talenitics';

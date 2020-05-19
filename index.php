@@ -13,7 +13,6 @@
 	require('libs/boot.php');
 
 	require('libs/database.php');
-	require('libs/view.php');
 	require('libs/controller.php');
 	require('libs/navigation.php');
 	require('libs/model.php');

@@ -14,15 +14,10 @@ class Clients extends Controller {
 
     public function index() {
 
-        if(!empty($_POST['fetchClients'])) {
+        if(!empty($_GET['fetchClients'])) {
             echo json_encode($this->model->loadClients());
             exit;
         }
-        
-        $this->bodyClass = 'fixed-header';
-        $this->loadPage();
-        $this->render('index');
-        $this->loadFooter();
     }
 
     public function add() {
@@ -34,11 +29,6 @@ class Clients extends Controller {
 
         $locationHelper = new LocationHelper();
         $this->countriesDD = $locationHelper->getCountriesOptions();
-
-        $this->bodyClass = 'fixed-header';
-        $this->loadPage();
-        $this->render('add');
-        $this->loadFooter();
     }
 
     public function edit(int $id) {
@@ -77,11 +67,6 @@ class Clients extends Controller {
             header('location: ' . _SITEROOT_ . 'clients');
             exit;
         }
-
-        $this->bodyClass = 'fixed-header';
-        $this->loadPage();
-        $this->render('edit');
-        $this->loadFooter();
     }
 }
 

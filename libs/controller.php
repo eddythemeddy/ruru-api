@@ -1,6 +1,6 @@
 <?php
 
-class Controller extends View {
+class Controller {
     
     function __construct() {
         $_POST = json_decode(file_get_contents('php://input'), true);

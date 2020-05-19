@@ -7,13 +7,6 @@ class Home extends Controller {
   }
 
   public function index() {
-
-    $this->title = "Ghostly";
-    $this->noMenu = true;
-    $this->loadPage();
-    $this->render('index');
-    $this->loadFooter();
-
   }
 
 }

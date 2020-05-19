@@ -65,8 +65,8 @@ class Clients_Model extends Model {
 
 	public function loadClients() {
 
-        $page   = ($_POST['start']/$_POST['length']) + 1;
-        $status = !empty($_POST['status']) ? $this->eqDb->escape($_POST['status']) : 0;
+        $page   = ($_GET['start']/$_GET['length']) + 1;
+        $status = !empty($_GET['status']) ? $this->eqDb->escape($_GET['status']) : 0;
 
         $siteRoot = _SITEROOT_;
 
@@ -89,19 +89,18 @@ class Clients_Model extends Model {
 
         $colsAfter = [
         	'name',
-        	"phone", 
-        	"address",
-        	"repeats"
+        	'phone', 
+        	'address',
+        	'repeats'
         ];
 
+        $orderBy  = $colsAfter[$_GET['order'][0]['column']];
+        $orderDir = $_GET['order'][0]['dir'];
 
-        $orderBy  = $colsAfter[$_POST['order'][0]['column']];
-        $orderDir = $_POST['order'][0]['dir'];
+		$this->eqDb->pageLimit = $_GET['length'];
 
-		$this->eqDb->pageLimit = $_POST['length'];
-
-		if(!empty($_POST['search'])) {
-			$search = $this->eqDb->escape($_POST['search']['value']);
+		if(!empty($_GET['search'])) {
+			$search = $this->eqDb->escape($_GET['search']['value']);
 			$this->eqDb->where('(phone LIKE "%' . $search . '%" OR address LIKE "%' . $search . '%" OR name LIKE "%' . $search . '%")');
 		}
 

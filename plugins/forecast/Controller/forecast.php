@@ -23,11 +23,6 @@ class Forecast extends Controller {
             echo json_encode($this->model->fetchForecast($this->rangeData['rangeUgly']));
             exit;
         }
-
-        $this->bodyClass        = 'fixed-header';
-        $this->loadPage();
-        $this->render('list');
-        $this->loadFooter();
     }
 
     public function prepSheet($dateRange = null) {
@@ -42,11 +37,6 @@ class Forecast extends Controller {
             echo json_encode($this->model->fetchForecast($this->rangeData['rangeUgly']));
             exit;
         }
-
-        $this->bodyClass        = 'fixed-header';
-        $this->loadPage();
-        $this->render('prep-sheet-2');
-        $this->loadFooter();
     }
 
     public function all() {
@@ -55,11 +45,6 @@ class Forecast extends Controller {
             echo json_encode($this->model->fetchForecast());
             exit;
         }
-
-        $this->bodyClass        = 'fixed-header';
-        $this->loadPage();
-        $this->render('list-all');
-        $this->loadFooter();
     }
 
     public function event(string $eventId) {
@@ -82,11 +67,6 @@ class Forecast extends Controller {
         $this->subRecipes = $this->model->loadSubRecipes();
         $this->event      = $this->model->getEventDetails($eventId);
         $this->eventId    = $eventId;
-
-        $this->bodyClass  = 'fixed-header';
-        $this->loadPage();
-        $this->render('event-view');
-        $this->loadFooter();
     }
 
     public function calendar() {
@@ -120,134 +100,16 @@ class Forecast extends Controller {
 
         $this->channels         = $this->model->loadChannels();
         $this->subRecipes       = $this->model->loadSubRecipes();
-
-        $this->hasHeader        = false;
-        $this->bodyClass        = 'no-header';
-        $this->loadPage();
-        $this->render('new-cal');
-        $this->loadFooter();
     }
 
     public function purchaseOrder($range) {
 
         $this->pruchaseOrder = $this->model->createPurchaseOrder($range);
-
-        $this->bodyClass = 'fixed-header';
-        $this->loadPage();
-        $this->render('purchase-order');
-        $this->loadFooter();
     }
 
     public function purchaseOrderEvent($event) {
 
         $this->pruchaseOrder = $this->model->createPurchaseOrder($event);
-
-        $this->bodyClass = 'fixed-header';
-        $this->loadPage();
-        $this->render('purchase-order');
-        $this->loadFooter();
-    }
-
-    public function test() {
-        global $eqDb;
-
-        $this->eqDb = $eqDb;
-
-        $query = $this->eqDb->withTotalCount()->rawQuery(
-            "SELECT SQL_CALC_FOUND_ROWS SQL_CALC_FOUND_ROWS
-                fr.`forecast_id`, 
-                fr.`total`, 
-                f.`start_time`, 
-                f.`end_time`, 
-                f.`date`, 
-                c.`name` AS cl,
-                CASE
-                    WHEN status IS NULL THEN \"Unpaid\"
-                    WHEN status = 0 THEN \"Unpaid\"
-                    WHEN status = 1 THEN \"Paid\"
-                END AS status,
-                CASE
-                    WHEN status IS NULL THEN '<span class=\"label text-uppercase label-important\">Unpaid</span>'
-                    WHEN status = 0 THEN '<span class=\"label text-uppercase label-important\">Unpaid</span>'
-                    WHEN status = 1 THEN '<span class=\"label text-uppercase label-inverse\">Paid</span>'
-                    WHEN status = 2 THEN '<span class=\"label text-uppercase label-warning\">Canceled</span>'
-                END AS statusPretty
-            from forecast as f
-            inner join (
-               select forecast_id, SUM(total * instantaneous_subrecipe_price) as total
-               from forecast_recipes 
-               group by forecast_id) as fr on f.`id` = fr.`forecast_id`
-            LEFT JOIN (
-                SELECT id, name
-                FROM channels
-            ) as c on c.`id` = f.`channel_id`
-            WHERE 
-                (
-                    deleted = '0' AND 
-                    date_range = '" . $dateRange . "' AND 
-                    company_id = '" . $_SESSION['scouty_company_id'] . "'
-                )
-            ORDER BY " . $orderBy . " " . $orderDir . " LIMIT " . $currentPage . ", " . $_POST['length']
-        );
-
-        echo $this->eqDb->totalCount;
-    }
-
-    public function updateExisting() {
-
-        global $eqDb;
-
-        $this->eqDb = $eqDb;
-
-        // $this->eqDb->rawQuery(
-        //         'UPDATE forecast SET event_type = "public"'
-        //     );
-
-        $forecastRecs = $this->eqDb->get('forecast_recipes', null, '*');
-        $newArray = [];
-
-        foreach($forecastRecs as $key => $val) {
-
-            $newArray = [];
-			$subs = $this->eqDb->subQuery ('i');
-			$subs->where('company_id', $_SESSION['scouty_company_id']);
-			$subs->get('ingredients', null, 'id, name');
-
-			$this->eqDb->join($subs, 'sr.ingredient_id = i.id', 'LEFT');
-
-			$this->eqDb->where('sr.recipe_sub_id', $val['sub_recipe_id']);
-			$merged = $this->eqDb->get('recipes_sub_ingredients sr',null,[
-				'ingredient_weight',
-				'i.name AS name', 
-				'(ingredient_weight * ' .$val['total'] . ') AS total'
-			]);
-            
-            $merged = str_replace(['[', ']'], '', addslashes(json_encode($merged)));
-
-            $this->eqDb->rawQuery(
-               'UPDATE forecast_recipes SET instantaneous_subrecipe_ing_weights = "' . $merged . '" WHERE id = "' . $val['id'] . '"'
-            );
-        }
-
-        // $subRecipeId    = $key;
-        // $subName        = $variation['sub_name'];
-        // $amount         = $variation['amount'];
-
-        // $subs = $this->eqDb->subQuery ('i');
-        // $subs->where('company_id', $_SESSION['scouty_company_id']);
-        // $subs->get('ingredients', null, 'id, name');
-
-        // $this->eqDb->join($subs, 'sr.ingredient_id = i.id', 'LEFT');
-
-        // $this->eqDb->where('sr.recipe_sub_id', $subRecipeId);
-        // $instantaneousIngredients = $this->eqDb->get('recipes_sub_ingredients sr',null,'i.name AS ingredient_name, i.id, ingredient_weight, sr.recipe_sub_id');
-
-        // $instIngWeights = addslashes(json_encode($instantaneousIngredients));
-
-        // $this->eqDb->rawQuery(
-        //     'INSERT INTO forecast_recipes (forecast_id, sub_recipe_name, recipe_name, sub_recipe_id, recipe_id, total, date_range, company_id, instantaneous_subrecipe_ing_weights)
-        //         VALUES ("' . $id . '","' . $subName . '","' . $recipeName . '","' . $subRecipeId . '","' . $recipeId . '","' . $amount . '","' . $dateRange . '","' . $_SESSION['scouty_company_id'] . '","' . $instIngWeights . '")'
-        // );
     }
 }
 
