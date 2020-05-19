@@ -7,12 +7,20 @@ class Login extends Controller {
   }
 
   public function index() {
-
+    
     if(!empty($_POST['username']) && !empty($_POST['password'])) {
       $login = $this->model->process();
       echo json_encode($login);
       exit;
     }
+
+    // $this->bodyClass = 'fixed-header';    
+    // $this->title = 'Login';
+    // $this->noMenu = true;
+    // $this->loadPage();
+    // $this->render('index');
+    // $this->loadFooter();
+
   }
 
   public function logout() {
