@@ -26,7 +26,7 @@
     "jquery.scrollbar": "^0.2.11",
     "load-grunt-tasks": "^5.1.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "npm": "^6.8.0",
     "simplebar": "^4.3.0-alpha.0",
     "sortablejs": "^1.7.0"
